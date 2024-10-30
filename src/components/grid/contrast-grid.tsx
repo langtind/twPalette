@@ -9,11 +9,10 @@ import {
 import { Controls } from "./controls";
 import { GridCell } from "./grid-cell";
 import {
-  Method,
-  Score,
   getContrast,
   meetsContrastThreshold,
-  ratioToPercentage,
+  Method,
+  Score,
 } from "@/lib/contrast-utils";
 import { getLuminance, shouldUseLightText } from "@/lib/colors.ts";
 
@@ -30,7 +29,7 @@ export function ContrastGrid({
 }: ContrastGridProps) {
   const [useAutoTextColor, setUseAutoTextColor] = useState(false);
   const [method, setMethod] = useState<Method>("wcag2");
-  const [score, setScore] = useState<Score>("60");
+  const [score, setScore] = useState<Score>("AA");
 
   const colorShades = [
     { name: "White", value: "#FFFFFF" },
@@ -38,34 +37,14 @@ export function ContrastGrid({
     { name: "Black", value: "#000000" },
   ];
 
-  const formatContrast = (
-    ratio: number,
-    rowIndex: number,
-    colIndex: number,
-  ) => {
+  const formatContrast = (ratio: number) => {
     if (!meetsContrastThreshold(ratio, score)) return "";
 
-    const percentage = ratioToPercentage(ratio);
-
-    if (colIndex > rowIndex) {
-      return `-${Math.round(percentage)}%`;
-    }
-    if (colIndex < rowIndex) {
-      return `${Math.round(percentage)}%`;
-    }
-    return "";
+    return ratio.toFixed(1); // Display positive value only
   };
 
-  const shouldShowBackground = (
-    ratio: number,
-    rowIndex: number,
-    colIndex: number,
-  ) => {
-    if (!meetsContrastThreshold(ratio, score)) return false;
-
-    if (colIndex > rowIndex && colIndex >= 6) return true;
-    if (rowIndex > colIndex && rowIndex >= 6) return true;
-    return false;
+  const shouldShowBackground = (ratio: number) => {
+    return meetsContrastThreshold(ratio, score);
   };
 
   return (
@@ -87,7 +66,7 @@ export function ContrastGrid({
           <div className="flex-1 min-h-0">
             <ScrollArea className="h-full rounded-md border">
               <div className="min-w-[800px]">
-                <div className="grid grid-cols-[150px_repeat(12,1fr)] gap-1">
+                <div className="grid grid-cols-[150px_repeat(12,1fr)] gap-1 mr-2 mb-2">
                   {/* Header row */}
                   <div className="sticky top-0 bg-background z-10">
                     <div className="p-2 font-medium text-gray-400"></div>
@@ -115,16 +94,8 @@ export function ContrastGrid({
                         const l1 = getLuminance(rowShade.value);
                         const l2 = getLuminance(colShade.value);
                         const contrast = getContrast(l1, l2, method);
-                        const formattedContrast = formatContrast(
-                          contrast,
-                          rowIndex,
-                          colIndex,
-                        );
-                        const showBackground = shouldShowBackground(
-                          contrast,
-                          rowIndex,
-                          colIndex,
-                        );
+                        const formattedContrast = formatContrast(contrast);
+                        const showBackground = shouldShowBackground(contrast);
                         const useLightText = shouldUseLightText(colShade.value);
 
                         return (

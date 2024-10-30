@@ -112,7 +112,7 @@ export function generateShades(baseColor: string) {
 }
 
 // Normalized RGB values (0-1 range)
-const hexToNormalizedRgb = (hex: string) => {
+export const hexToNormalizedRgb = (hex: string) => {
   const rgb = hex.match(/\w\w/g)?.map((x) => parseInt(x, 16)) || [0, 0, 0];
   return rgb.map((val) => val / 255);
 };

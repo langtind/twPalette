@@ -47,15 +47,15 @@ export function Controls({
         <RadioGroup value={score} onValueChange={onScoreChange}>
           <div className="space-y-2">
             <div className="flex items-center space-x-2">
-              <RadioGroupItem value="60" id="60" />
-              <Label htmlFor="60" className="text-sm text-gray-500">
-                60%+ (Similar to AA)
+              <RadioGroupItem value="AA" id="AA" />
+              <Label htmlFor="AA" className="text-sm text-gray-500">
+                AA (4.5+)
               </Label>
             </div>
             <div className="flex items-center space-x-2">
-              <RadioGroupItem value="80" id="80" />
-              <Label htmlFor="80" className="text-sm text-gray-500">
-                80%+ (Similar to AAA)
+              <RadioGroupItem value="AAA" id="AAA" />
+              <Label htmlFor="AAA" className="text-sm text-gray-500">
+                AAA (7.0+)
               </Label>
             </div>
             <div className="flex items-center space-x-2">
