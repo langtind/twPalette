@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { AlertCircle, Check, Plus, Settings } from "lucide-react";
+import { Check, Plus, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -9,42 +9,32 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { ColorPicker } from "@/components/color-picker";
 import { Input } from "@/components/ui/input";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 interface ColorInputProps {
   value: string;
   onChange: (value: string) => void;
   onAddSecondary?: () => void;
-}
-
-interface GeneratorSettings {
   useTailwindCharacteristics: boolean;
+  onToggleUseTailwindCharacteristics: () => void;
   fixInputColorTo500: boolean;
-  useConsistentAPCA: boolean;
+  onToggleFixInputColorTo500: () => void;
 }
 
 export function ColorInput({
   value = "#9b40ea",
   onChange,
   onAddSecondary,
+  useTailwindCharacteristics,
+  onToggleUseTailwindCharacteristics,
+  fixInputColorTo500,
+  onToggleFixInputColorTo500,
 }: ColorInputProps) {
   const [inputValue, setInputValue] = React.useState(value);
   const [isValidHex, setIsValidHex] = React.useState(true);
   const [showSettings, setShowSettings] = React.useState(false);
   const [isInputActive, setIsInputActive] = React.useState(false);
   const inputRef = React.useRef<HTMLInputElement>(null);
-  const [settings, setSettings] = React.useState<GeneratorSettings>({
-    useTailwindCharacteristics: true,
-    fixInputColorTo500: false,
-    useConsistentAPCA: false,
-  });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value.toLowerCase();
@@ -67,13 +57,6 @@ export function ColorInput({
     if (isValid) {
       onChange(hex);
     }
-  };
-
-  const toggleSetting = (setting: keyof GeneratorSettings) => {
-    setSettings((prev) => ({
-      ...prev,
-      [setting]: !prev[setting],
-    }));
   };
 
   // Update input value when color changes from picker
@@ -99,17 +82,13 @@ export function ColorInput({
         }`}
         onClick={handleDivClick}
       >
-        <Popover>
-          <PopoverTrigger asChild>
-            <button
-              className="w-8 h-8 rounded-full border border-border/50 transition-transform hover:scale-105"
-              style={{ backgroundColor: isValidHex ? value : "#ffffff" }}
-            />
-          </PopoverTrigger>
-          <PopoverContent className="w-auto p-4">
-            <ColorPicker color={value} onChange={onChange} />
-          </PopoverContent>
-        </Popover>
+        <input
+          type="color"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          className="w-8 h-8 rounded-full transition-transform hover:scale-105 cursor-pointer [&::-webkit-color-swatch-wrapper]:p-0 [&::-webkit-color-swatch]:border-none [&::-webkit-color-swatch]:rounded-full [&::-moz-color-swatch]:border-none [&::-moz-color-swatch]:rounded-full border-0"
+          style={{ backgroundColor: isValidHex ? value : "#ffffff" }}
+        />
         <Input
           ref={inputRef}
           value={inputValue}
@@ -150,16 +129,9 @@ export function ColorInput({
             </div>
           </DialogHeader>
           <div className="space-y-4">
-            <Alert variant="destructive">
-              <AlertCircle className="h-4 w-4" />
-              <AlertTitle>Work in progress</AlertTitle>
-              <AlertDescription>
-                Currently these settings don't work, not implemented yet!
-              </AlertDescription>
-            </Alert>
             <button
               className="w-full text-left p-4 rounded-lg border hover:bg-gray-50 transition-colors relative"
-              onClick={() => toggleSetting("useTailwindCharacteristics")}
+              onClick={onToggleUseTailwindCharacteristics}
             >
               <div className="pr-8">
                 <h3 className="font-semibold text-lg mb-1">
@@ -171,7 +143,7 @@ export function ColorInput({
                   based on the lightness.
                 </p>
               </div>
-              {settings.useTailwindCharacteristics && (
+              {useTailwindCharacteristics && (
                 <div className="absolute right-4 top-4 bg-black rounded-full p-1">
                   <Check className="h-4 w-4 text-white" />
                 </div>
@@ -180,7 +152,7 @@ export function ColorInput({
 
             <button
               className="w-full text-left p-4 rounded-lg border hover:bg-gray-50 transition-colors relative"
-              onClick={() => toggleSetting("fixInputColorTo500")}
+              onClick={onToggleFixInputColorTo500}
             >
               <div className="pr-8">
                 <h3 className="font-semibold text-lg mb-1">
@@ -192,7 +164,7 @@ export function ColorInput({
                   proportionally lighter or darker.
                 </p>
               </div>
-              {settings.fixInputColorTo500 && (
+              {fixInputColorTo500 && (
                 <div className="absolute right-4 top-4 bg-black rounded-full p-1">
                   <Check className="h-4 w-4 text-white" />
                 </div>
@@ -201,7 +173,7 @@ export function ColorInput({
 
             <button
               className="w-full text-left p-4 rounded-lg border hover:bg-gray-50 transition-colors relative"
-              onClick={() => toggleSetting("useConsistentAPCA")}
+              onClick={() => {}}
             >
               <div className="pr-8">
                 <h3 className="font-semibold text-lg mb-1">
@@ -213,11 +185,6 @@ export function ColorInput({
                   match any shade exactly.
                 </p>
               </div>
-              {settings.useConsistentAPCA && (
-                <div className="absolute right-4 top-4 bg-black rounded-full p-1">
-                  <Check className="h-4 w-4 text-white" />
-                </div>
-              )}
             </button>
           </div>
         </DialogContent>
