@@ -83,7 +83,7 @@ export default function TailwindColorGenerator() {
             Color Generator
           </div>
           <p className="text-gray-600 md:text-lg mt-6 hidden md:block leading-normal">
-            Press spacebar or enter a hexcode
+            Press <span className="underline">spacebar</span> or enter a hexcode
             <br />
             to create a custom color scale
           </p>
