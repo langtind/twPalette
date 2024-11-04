@@ -1,10 +1,10 @@
 "use client";
 
 import * as React from "react";
-import { ColorInput } from "@/components/color-input";
 import ColorPalette from "@/components/color-palette";
 import { ExportDialog } from "@/components/export-dialog";
 import { generateRandomHex, generateShades } from "@/lib/colors";
+import ColorInput from "@/components/color-input.tsx";
 
 export default function TailwindColorGenerator() {
   const [baseColor, setBaseColor] = React.useState(() => generateRandomHex());

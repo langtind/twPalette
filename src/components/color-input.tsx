@@ -9,7 +9,17 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
 
 interface ColorInputProps {
   value: string;
@@ -21,7 +31,7 @@ interface ColorInputProps {
   onToggleFixInputColorTo500: () => void;
 }
 
-export function ColorInput({
+export default function ColorInput({
   value = "#9b40ea",
   onChange,
   onAddSecondary,
@@ -34,6 +44,7 @@ export function ColorInput({
   const [isValidHex, setIsValidHex] = React.useState(true);
   const [showSettings, setShowSettings] = React.useState(false);
   const [isInputActive, setIsInputActive] = React.useState(false);
+  const [showAlertDialog, setShowAlertDialog] = React.useState(false);
   const inputRef = React.useRef<HTMLInputElement>(null);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -112,21 +123,38 @@ export function ColorInput({
           <Settings className="h-5 w-5" />
         </Button>
       </div>
+
       <Button
         variant="ghost"
         className="text-base text-muted-foreground hover:text-foreground"
-        onClick={onAddSecondary}
+        onClick={() => {
+          setShowAlertDialog(true);
+          onAddSecondary?.();
+        }}
       >
         <Plus className="mr-2 h-4 w-4" />
         Add secondary color
       </Button>
 
+      <AlertDialog open={showAlertDialog} onOpenChange={setShowAlertDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Coming Soon!</AlertDialogTitle>
+            <AlertDialogDescription>
+              Secondary color support will be available in a future update.
+              We're working hard to bring you this feature!
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogAction>OK</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
       <Dialog open={showSettings} onOpenChange={setShowSettings}>
         <DialogContent className="sm:max-w-[525px]">
           <DialogHeader>
-            <div className="flex items-center justify-between">
-              <DialogTitle>Generator settings</DialogTitle>
-            </div>
+            <DialogTitle>Generator settings</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             <button
@@ -176,8 +204,11 @@ export function ColorInput({
               onClick={() => {}}
             >
               <div className="pr-8">
-                <h3 className="font-semibold text-lg mb-1">
+                <h3 className="font-semibold text-lg mb-1 flex items-center gap-2">
                   Consistent APCA contrast
+                  <Badge variant="secondary" className="text-xs font-normal">
+                    Coming Soon
+                  </Badge>
                 </h3>
                 <p className="text-gray-500">
                   Each shade number has a consistent APCA contrast value every
